@@ -15,11 +15,15 @@ input="$2" # Second argument specifies the input (file path or folder path)
 # Generate a date stamp for the output file
 date_stamp=$(date +"%Y-%m-%d_%H-%M-%S")
 
+# Set output directory
+output_dir="output"
+mkdir -p "$output_dir"
+
 # Handle the 'file' mode
 if [ "$mode" == "file" ]; then
   input_file="$input" # Use the provided file as the input list for ffmpeg
   base_name=$(basename "$input" .txt) # Extract the base name of the file
-  output_file="${base_name}_${date_stamp}.mp4" # Create the output file name
+  output_file="${output_dir}/${base_name}_${date_stamp}.mp4" # Create the output file name
 
 # Handle the 'folder' mode
 elif [ "$mode" == "folder" ]; then
@@ -29,7 +33,7 @@ elif [ "$mode" == "folder" ]; then
     echo "file '$(realpath "$img")'" >> "$input_file"
   done
   base_name=$(basename "$input") # Extract the base name of the folder
-  output_file="${base_name}_${date_stamp}.mp4" # Create the output file name
+  output_file="${output_dir}/${base_name}_${date_stamp}.mp4" # Create the output file name
 
 # Handle invalid modes
 else
