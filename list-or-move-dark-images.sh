@@ -26,7 +26,7 @@ debug=0
 if [ "$#" -eq 3 ] && [ "$3" == "debug" ]; then
   debug=1
 fi
-brightness_threshold=0.25  # Adjust as needed (0.0 - 1.0)
+brightness_threshold=0.26  # Adjust as needed (0.0 - 1.0)
 
 # Build list of files
 if [ -d "$input" ]; then
