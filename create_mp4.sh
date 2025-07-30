@@ -1,11 +1,13 @@
 #!/bin/bash
 
 # Check if the correct number of arguments is provided
-if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <mode> <input>"
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+  echo "Usage: $0 <mode> <input> [framerate]"
   echo "Modes:"
   echo "  file   - Provide a file containing a list of JPGs"
   echo "  folder - Provide a folder containing JPGs"
+  echo "Optional:"
+  echo "  framerate - Set output video framerate (allowed: 6, 12, 24; default: 24)"
   exit 1
 fi
 
@@ -42,7 +44,18 @@ else
 fi
 
 # Run ffmpeg to create an MP4 video from the list of JPGs
-ffmpeg -f concat -safe 0 -i "$input_file" -vsync vfr -pix_fmt yuv420p "$output_file"
+# Check for optional framerate argument (third argument)
+framerate=24
+if [ "$#" -ge 3 ]; then
+  if [[ "$3" =~ ^(6|12|24)$ ]]; then
+    framerate="$3"
+  else
+    echo "Invalid framerate. Allowed values: 6, 12, 24."
+    exit 1
+  fi
+fi
+
+ffmpeg -f concat -safe 0 -i "$input_file" -r "$framerate" -fps_mode vfr -pix_fmt yuv420p "$output_file"
 
 # Clean up the temporary file if 'folder' mode was used
 if [ "$mode" == "folder" ]; then
